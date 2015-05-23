@@ -1,0 +1,625 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 5.6.2.final using JasperReports Library version 5.6.1  -->
+<!-- 2014-11-15T09:30:30 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="maintain_charge_record_final" printOrder="Horizontal" pageWidth="800" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="780" leftMargin="20" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="fc97a963-c0b6-4c19-a348-7e2773e092a3">
+	<property name="template.engine" value="tabular_template"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="hpsDB"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="Table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+			<topPen lineWidth="1.0" lineColor="#000000"/>
+			<leftPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#EFEFEF" hAlign="Center" vAlign="Middle">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF" hAlign="Center" vAlign="Middle">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD_Integer" mode="Opaque" backcolor="#FFFFFF" hAlign="Right" vAlign="Middle" pattern="#,###.###;(#,###.###-)">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD_Double" mode="Opaque" backcolor="#FFFFFF" hAlign="Right" vAlign="Middle" pattern="#,##0.00#;(#,##0.00#-)">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD_Percent" mode="Opaque" backcolor="#FFFFFF" hAlign="Right" vAlign="Middle" pattern="###0.##%">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="tableDataset" uuid="c016169f-f201-46c8-90ab-34a3e3aedc77">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="hpsDB"/>
+		<parameter name="charge_start_date" class="java.lang.String"/>
+		<parameter name="charge_end_date" class="java.lang.String"/>
+		<parameter name="paymentdate_id" class="java.lang.Long"/>
+		<parameter name="oper_id" class="java.lang.Long"/>
+		<queryString language="SQL">
+			<![CDATA[select round(@mycnt := @mycnt + 1) as row_no,
+    records.*
+from
+(
+    select
+        area.name area_name,
+        louzuo.name louzuo_name,
+        house.danyuan,
+        house.ceng,
+        house.door_no,
+        owner.wage_num,
+        owner.name as owner_name,
+        shenfenxingzhi.name as shenfenxingzhi_name,
+        unit.unit,
+        house.repair_area,
+        round(record.must_charge, 2) must_charge,
+        round(record.actual_charge, 2) actual_charge,
+        if (record.diverted = 1, '是', '否') diverted,
+        app_user.first_name oper_name
+      from hps.hps_maintain_charge_record record,
+           hps.hps_house house,
+           hps.hps_house_owner owner,
+           hps.hps_louzuo louzuo,
+           hps.hps_area area,
+           hps.hps_dictitem shenfenxingzhi,
+           hps.hps_maintain_unit unit,
+           hps.hps_maintain_payment_date paymentdate,
+           hps.hps_user oper,
+           hps.app_user app_user
+        where record.house_id = house.id
+           and house.louzuo_id = louzuo.id
+           and louzuo.area_id = area.id
+           and house.shenfen_xingzhi_id = shenfenxingzhi.id
+           and record.house_owner_id = owner.id
+           and record.unit_id = unit.id
+           and record.payment_date_id = paymentdate.id
+           and record.oper_user_id = oper.id
+           and oper.app_user_id = app_user.id
+           and (DATE_FORMAT(record.charge_date, '%Y-%m-%d') >= $P{charge_start_date} or $P{charge_start_date}  is null)
+           and (DATE_FORMAT(record.charge_date, '%Y-%m-%d') <= $P{charge_end_date} or $P{charge_end_date} is null)
+           and paymentdate.id = $P{paymentdate_id}
+           and (oper.id = $P{oper_id} or $P{oper_id} is null)
+    order by area_name, louzuo_name, danyuan, ceng, door_no) records, (select (@mycnt := 0)) num_table]]>
+		</queryString>
+		<field name="row_no" class="java.lang.Double"/>
+		<field name="area_name" class="java.lang.String"/>
+		<field name="louzuo_name" class="java.lang.String"/>
+		<field name="danyuan" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="ceng" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="door_no" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="wage_num" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="owner_name" class="java.lang.String"/>
+		<field name="shenfenxingzhi_name" class="java.lang.String"/>
+		<field name="unit" class="java.lang.Double">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="diverted" class="java.lang.String"/>
+		<field name="oper_name" class="java.lang.String"/>
+		<field name="repair_area" class="java.lang.Double">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="actual_charge" class="java.lang.Double"/>
+		<field name="must_charge" class="java.lang.Double"/>
+	</subDataset>
+	<parameter name="paymentdate_id" class="java.lang.Long"/>
+	<parameter name="charge_start_date" class="java.lang.String"/>
+	<parameter name="charge_end_date" class="java.lang.String"/>
+	<parameter name="oper_id" class="java.lang.Long">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT title FROM hps.hps_maintain_payment_date where id = $P{paymentdate_id}]]>
+	</queryString>
+	<field name="title" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<title>
+		<band height="52" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="0" y="10" width="780" height="29" uuid="81f18f02-70df-46cf-8d82-7ca835e86ec0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{title} + "报表明细导出"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<summary>
+		<band height="200" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<componentElement>
+				<reportElement isPrintRepeatedValues="false" x="0" y="0" width="780" height="200" uuid="8d760d56-373d-4bae-858c-70127ed8fde0">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="tableDataset" uuid="ad7e9144-8b9b-4859-9d7e-e95e5ad926af">
+						<datasetParameter name="charge_start_date">
+							<datasetParameterExpression><![CDATA[$P{charge_start_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="charge_end_date">
+							<datasetParameterExpression><![CDATA[$P{charge_end_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="paymentdate_id">
+							<datasetParameterExpression><![CDATA[$P{paymentdate_id}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="oper_id">
+							<datasetParameterExpression><![CDATA[$P{oper_id}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="40" uuid="2b75f18f-2728-44ac-bbba-5d554bf39690">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<jr:columnHeader style="Table_CH" height="20">
+							<staticText>
+								<reportElement style="Table_CH" x="0" y="0" width="40" height="20" uuid="a1d15933-3510-444c-b8c3-8a7c82bdee52">
+									<property name="local_mesure_unitheight" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[编号]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField>
+								<reportElement key="" style="Table_TD" x="0" y="0" width="40" height="20" uuid="5d83ecc4-fab0-4653-9841-fd8b9579cd69">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{row_no}.intValue()]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="40" uuid="f6bfb6fa-c761-4c15-99e8-da54c1b9485e">
+						<jr:columnHeader style="Table_CH" height="20">
+							<staticText>
+								<reportElement style="Table_CH" x="0" y="0" width="40" height="20" uuid="aac4f0d1-b72c-4e45-875b-d00a24e46b17">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+									<property name="local_mesure_unitwidth" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[区域]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField>
+								<reportElement style="Table_TD" x="0" y="0" width="40" height="20" uuid="b7cc2fdd-dba7-46b5-a22e-800afd753ccf">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{area_name}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="40" uuid="e4a6b9b6-551f-4164-8316-565e3d8d6a28">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<jr:columnHeader style="Table_CH" height="20">
+							<staticText>
+								<reportElement style="Table_CH" x="0" y="0" width="40" height="20" uuid="549d0655-2aaa-49be-8cc3-3ff9cd8b621b">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[楼号]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField>
+								<reportElement style="Table_TD" x="0" y="0" width="40" height="20" uuid="cc4daa0e-8971-42e1-8738-0d285fa1a52c">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{louzuo_name}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="40" uuid="896d81bb-e4a7-401a-a64a-d3285dd2d08f">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<jr:columnHeader style="Table_CH" height="20">
+							<staticText>
+								<reportElement style="Table_CH" x="0" y="0" width="40" height="20" uuid="d8e87ff0-4518-44e0-a889-f15d614a7287">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[单元]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField>
+								<reportElement style="Table_TD" x="0" y="0" width="40" height="20" uuid="bf354a97-9540-4dc5-b821-d60bcb2b1ac3">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{danyuan}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="40" uuid="5604881e-696c-429b-9401-fbcd3c94ed3a">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<jr:columnHeader style="Table_CH" height="20">
+							<staticText>
+								<reportElement style="Table_CH" x="0" y="0" width="40" height="20" uuid="0ccc0968-01e1-492b-9d94-4be404251fa1">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[层]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField>
+								<reportElement style="Table_TD" x="0" y="0" width="40" height="20" uuid="daee1642-0470-4458-8ab6-1771ce2ae88e">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{ceng}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="50" uuid="cdd8fe8a-1614-407a-8db3-6f8ab5d4a06d">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<jr:columnHeader style="Table_CH" height="20">
+							<staticText>
+								<reportElement style="Table_CH" x="0" y="0" width="50" height="20" uuid="e5361135-d01f-4802-bd16-59582cb79cc4">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[门牌号]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField>
+								<reportElement style="Table_TD" x="0" y="0" width="50" height="20" uuid="122ed8b6-27ea-4dc3-9f81-af977cb75968">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{door_no}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="ace12073-a71f-42e3-a50c-818239418885">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<jr:columnHeader style="Table_CH" height="20">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<staticText>
+								<reportElement style="Table_CH" x="0" y="0" width="100" height="20" uuid="ff8f7d31-c091-4fe5-9d48-d2a2547ea8ac">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[工资号]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField>
+								<reportElement style="Table_TD" x="0" y="0" width="100" height="20" uuid="0a82efa8-13f6-457d-8649-935e7d3de3ab">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{wage_num}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="50" uuid="5940df1d-9a36-4f7a-a8db-2c38d2604720">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<jr:columnHeader style="Table_CH" height="20">
+							<staticText>
+								<reportElement style="Table_CH" x="0" y="0" width="50" height="20" uuid="c93e25b3-9978-45ef-88d6-382f5174f9f9">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[户名]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField>
+								<reportElement style="Table_TD" x="0" y="0" width="50" height="20" uuid="72d0aff8-a6b0-429d-b3ad-46840467da01">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{owner_name}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="50" uuid="5b1369b5-60db-41de-89a0-82424bc3def7">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<jr:columnHeader style="Table_CH" height="20">
+							<staticText>
+								<reportElement style="Table_CH" x="0" y="0" width="50" height="20" uuid="816841f9-673d-47e0-a605-a8bf15937dc9">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[身份]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField>
+								<reportElement style="Table_TD" x="0" y="0" width="50" height="20" uuid="24920b67-8bcf-4d20-b406-20f1ed9bca75">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{shenfenxingzhi_name}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="50" uuid="ae282062-4a45-4de7-96a5-d57b52f03d3b">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<jr:columnHeader style="Table_CH" height="20">
+							<staticText>
+								<reportElement style="Table_CH" x="0" y="0" width="50" height="20" uuid="2d37218c-a9c3-4a32-9fc4-b6a78119e4c7">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+									<property name="local_mesure_unitwidth" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[单价]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField>
+								<reportElement style="Table_TD_Double" x="0" y="0" width="50" height="20" uuid="58481b62-6927-4a00-837a-894ceffd9d0f">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+									<property name="local_mesure_unitwidth" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{unit}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="60" uuid="028402e3-e666-4e84-97e6-f274c14f61a1">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<jr:columnHeader style="Table_CH" height="20">
+							<staticText>
+								<reportElement style="Table_CH" x="0" y="0" width="60" height="20" uuid="f54de6e9-d3ca-4413-abc6-450566066bc1">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[维修面积]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField>
+								<reportElement style="Table_TD_Double" x="0" y="0" width="60" height="20" uuid="ef3bd9c6-11ce-4c7f-8969-246cea186aea">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{repair_area}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="60" uuid="8c1bbb2e-f3c0-4f5f-a865-5e218df0926c">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<jr:columnHeader style="Table_CH" height="20">
+							<staticText>
+								<reportElement style="Table_CH" x="0" y="0" width="60" height="20" uuid="01671765-fb2b-4826-a01d-86e2db92697b">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[应交金额]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField>
+								<reportElement key="" style="Table_TD_Double" x="0" y="0" width="60" height="20" uuid="f3826535-efd9-4ef3-92cd-dc2853187f7e">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{must_charge}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="60" uuid="c18e918a-8cef-4735-89d6-e87f8978df0e">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<jr:columnHeader style="Table_CH" height="20">
+							<staticText>
+								<reportElement style="Table_CH" x="0" y="0" width="60" height="20" uuid="dc9e8141-6cd4-4657-80cb-de6c7bdbd7fd">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[实交金额]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField>
+								<reportElement style="Table_TD_Double" x="0" y="0" width="60" height="20" uuid="922de2cf-7f3c-463a-b204-f3510e17a9d1">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{actual_charge}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="40" uuid="060e07e2-7f5b-46b1-a78a-99bb207310d0">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<jr:columnHeader style="Table_CH" height="20">
+							<staticText>
+								<reportElement style="Table_CH" x="0" y="0" width="40" height="20" uuid="9e1502bd-0791-4c8d-a5da-1332de81e32a">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[结转]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField>
+								<reportElement style="Table_TD" x="0" y="0" width="40" height="20" uuid="fd6b28e0-d9db-4e54-a2bd-b00e5d979451">
+									<property name="local_mesure_unitheight" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{diverted}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="50" uuid="7f27c05b-b955-42a0-886a-b4d0e29bacdf">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<jr:columnHeader style="Table_CH" height="20">
+							<staticText>
+								<reportElement style="Table_CH" x="0" y="0" width="50" height="20" uuid="8d42c7c4-e4a4-4502-b306-b1703f1c32ed">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[操作员]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField isBlankWhenNull="false">
+								<reportElement style="Table_TD" x="0" y="0" width="50" height="20" uuid="5c5ff0f2-2ed8-47b5-8e54-1f5ff5fcae0c">
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+									<property name="local_mesure_unitwidth" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								</reportElement>
+								<box leftPadding="2"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{oper_name}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</summary>
+</jasperReport>
