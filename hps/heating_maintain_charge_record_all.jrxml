@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 5.6.2.final using JasperReports Library version 5.6.1  -->
-<!-- 2015-06-03T23:02:12 -->
+<!-- 2015-06-04T21:47:47 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="heating_maintain_charge_record_all" printOrder="Horizontal" pageWidth="820" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="800" leftMargin="20" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="fc97a963-c0b6-4c19-a348-7e2773e092a3">
 	<property name="template.engine" value="tabular_template"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="hpsDB"/>
@@ -133,6 +133,7 @@ from
            and (house.ceng = $P{ceng} or $P{ceng} is null)
            and (record.remarks like concat('%', $P{charge_record_remark}, '%') or $P{charge_record_remark} is null)
            and (owner.wage_num like concat('%', $P{wage_num}, '%') or $P{wage_num} is null)
+           and (owner.name like concat('%', $P{owner_name}, '%') or $P{owner_name} is null )
     order by area_name, louzuo_name, danyuan, ceng, door_no) records, (select (@mycnt := 0)) num_table]]>
 		</queryString>
 		<field name="row_no" class="java.lang.Double"/>
@@ -172,16 +173,10 @@ from
 	<parameter name="louzuo" class="java.lang.String"/>
 	<parameter name="danyuan" class="java.lang.String"/>
 	<parameter name="ceng" class="java.lang.String"/>
-	<parameter name="shenfenxingzhi" class="java.lang.String"/>
-	<parameter name="yongfangxingzhi" class="java.lang.String"/>
 	<parameter name="charge_state" class="java.lang.String"/>
 	<parameter name="charge_record_remark" class="java.lang.String"/>
 	<parameter name="oper_name" class="java.lang.String"/>
 	<parameter name="wage_num" class="java.lang.String"/>
-	<parameter name="diverted" class="java.lang.String"/>
-	<parameter name="living_so_hard" class="java.lang.String"/>
-	<parameter name="stopped" class="java.lang.String"/>
-	<parameter name="diverted_sohard_stopped_all" class="java.lang.String"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT title FROM hps.hps_heating_maintain_payment_date_2015 where id = $P{paymentdate_id}]]>
 	</queryString>
