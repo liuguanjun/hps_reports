@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 5.6.2.final using JasperReports Library version 5.6.1  -->
-<!-- 2015-06-06T08:59:54 -->
+<!-- 2015-06-07T11:33:31 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="heating_maintain_charge_record_all" printOrder="Horizontal" pageWidth="950" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="930" leftMargin="20" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="fc97a963-c0b6-4c19-a348-7e2773e092a3">
 	<property name="template.engine" value="tabular_template"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="hpsDB"/>
@@ -111,7 +111,7 @@ from
         round(record.actual_charge, 2) actual_charge,
         (case record.charge_state when 0 then '已缴费' when 1 then '未缴费' when 2 then '已取消' else '未缴费' end) charge_state,
         if (app_user.first_name is null, '', app_user.first_name) oper_name,
-        DATE_FORMAT(record.charge_date, '%Y-%m-%d %H:%i:%s') charge_date
+        if (record.charge_date is null, '', DATE_FORMAT(record.charge_date, '%Y-%m-%d %H:%i:%s')) charge_date
       from (hps.hps_heating_maintain_charge_record_2015 record
       	left outer join (select a.id, b.first_name from hps.hps_user a, 
    hps.app_user b where a.app_user_id = b.id) app_user on (record.oper_user_id = app_user.id),
